@@ -1,0 +1,47 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "targetMG": {
+            "type": "string",
+            "metadata": {
+                "description": "Target Management Group"
+            }
+        },
+        "listOfResourceTypesNotAllowed": {
+            "type": "array",
+            "defaultValue": [
+                "microsoft.compute/availabilitysets",
+                "microsoft.storage/storageaccounts"
+            ],
+            "metadata": {
+                "description": "An array of not allowed resources."
+            }
+        }
+    },
+    "variables": {
+        "mgScope": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]",
+        "policyDefinition2": "ResourceRestrictionTest3"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "name": "[variables('policyDefinition2')]",
+            "apiVersion": "2019-09-01",
+            "properties": {
+                "policyType": "Custom",
+                "mode": "All",
+                "parameters": {},
+                "policyRule": {
+                    "if": {
+                        "field": "type",
+                        "in": "[parameters('listOfResourceTypesNotAllowed')]"
+                    },
+                    "then": {
+                        "effect": "audit"
+                    }
+                }
+            }
+        }
+    ]
+}
