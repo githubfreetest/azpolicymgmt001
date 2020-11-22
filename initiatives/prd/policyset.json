@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "targetMG": {
+            "type": "string",
+            "metadata": {
+                "description": "Target Management Group"
+            }
+        },
+
+        "policysetname": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of policy set for production environment"
+            }
+        },
+        "policysetassignmentname": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of policy assignment for production environment"
+            }
+        }
+
+    },
+    "variables": {
+        "mgScope": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]",
+        "policyDefinition1": "allowed-locations-prd",
+        "policyDefinition2": "notallowed-resourcetypes-prd",
+        "policySetDefinition": "policysetTest3",
+        "policyAssignment": "policyAssignmentTest3"
+    },
+    "resources": [
+        {
+            "name": "[parameters('policysetname')]",
+            "type": "Microsoft.Authorization/policySetDefinitions",
+            "apiVersion": "2018-05-01",
+            "properties": {
+              "policyType": "Custom",
+              "displayName": "[parameters('policysetname')]",
+              "description": "[parameters('policysetname')]",
+              "metadata": {},
+              "parameters": {},
+              "policyDefinitions": [
+                {
+                    "policyDefinitionId": "[extensionResourceId(variables('mgScope'), 'Microsoft.Authorization/policyDefinitions', variables('policyDefinition1'))]",
+                    "parameters": {}
+                },
+                {
+                    "policyDefinitionId": "[extensionResourceId(variables('mgScope'), 'Microsoft.Authorization/policyDefinitions', variables('policyDefinition2'))]",
+                    "parameters": {}
+                }
+              ]
+            }
+          },
+
+        {
+            "type": "Microsoft.Authorization/policyAssignments",
+            "name": "[parameters('policysetassignmentname')]",
+            "apiVersion": "2019-09-01",
+            "location": "WestEurope",
+            "dependsOn": [
+                "[parameters('policysetname')]"
+            ],
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "scope": "[variables('mgScope')]",
+                "policyDefinitionId": "[extensionResourceId(variables('mgScope'), 'Microsoft.Authorization/policysetDefinitions', parameters('policysetname'))]"
+            }
+        }
+    ]
+}
