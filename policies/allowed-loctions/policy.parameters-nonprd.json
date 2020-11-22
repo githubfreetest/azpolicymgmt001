@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "targetMG": {
+      "value": "mg-testmg001"
+    },
+
+    "policyDefinitionName": {
+      "value": "allowed-locations-nonprd"
+    },
+
+    "allowedLocations": {
+      "value": [
+        "Central India",
+        "Central US",
+        "East US",
+        "East US 2",
+        "Europe",
+        "North Europe",
+        "Norway East",
+        "South Central US",
+        "Southeast Asia",
+        "Switzerland North",
+        "UK West",
+        "West Europe",
+        "West US"
+      ]
+    }
+  }
+}
