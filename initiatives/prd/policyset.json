@@ -27,8 +27,6 @@
         "mgScope": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]",
         "policyDefinition1": "allowed-locations-prd",
         "policyDefinition2": "notallowed-resources-prd",
-        "policySetDefinition": "policysetTest3",
-        "policyAssignment": "policyAssignmentTest3"
     },
     "resources": [
         {
