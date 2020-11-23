@@ -24,7 +24,7 @@
 
     },
     "variables": {
-        "mgScope": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]",
+        "mgScope": "[concat('Microsoft.Management/managementGroups/', parameters('targetMG'))]"
         "policyDefinition1": "allowed-locations-prd"
     },
     "resources": [
