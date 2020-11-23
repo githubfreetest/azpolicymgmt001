@@ -31,7 +31,7 @@
         }
     },
     "variables": {
-        "mgScope": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]"
+        "mgScope": "[concat('Microsoft.Management/managementGroups/', parameters('targetMG'))]"
     },
     "resources": [
         {
