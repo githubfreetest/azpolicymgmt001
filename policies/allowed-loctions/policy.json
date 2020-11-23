@@ -38,6 +38,7 @@
             "type": "Microsoft.Authorization/policyDefinitions",
             "name": "[parameters('policyDefinitionName')]",
             "apiVersion": "2019-09-01",
+            "scope": "[variables('mgScope')]",
             "properties": {
                 "policyType": "Custom",
                 "mode": "All",
