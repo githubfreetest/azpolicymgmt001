@@ -7,7 +7,7 @@
     },
 
     "policyDefinitionName": {
-      "value": "allowed-locations-prd"
+      "value": "allowed-locations-prod"
     },
 
     "allowedLocations": {
