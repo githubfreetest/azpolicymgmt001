@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "targetMG": {
-      "value": "mg-testmg001-lab"
+      "value": "mg-testmg001/mg-testmg001-lab"
     },
 
     "policyDefinitionName": {
