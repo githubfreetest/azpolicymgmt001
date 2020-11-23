@@ -23,6 +23,7 @@
     },
     "variables": {
         "mgScope": "[concat('Microsoft.Management/managementGroups/', parameters('targetMG'))]",
+        "mgScope2": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('targetMG'))]",
         "policyDefinition1": "allowed-locations-prd"
     },
     "resources": [
@@ -50,7 +51,7 @@
                                 "parameters": {},
                                 "policyDefinitions": [
                                     {
-                                        "policyDefinitionId": "[extensionResourceId(variables('mgScope'), 'Microsoft.Authorization/policyDefinitions', variables('policyDefinition1'))]",
+                                        "policyDefinitionId": "[extensionResourceId(variables('mgScope2'), 'Microsoft.Authorization/policyDefinitions', variables('policyDefinition1'))]",
                                         "parameters": {}
                                     }
                                 ]
