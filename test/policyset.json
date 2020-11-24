@@ -1,0 +1,73 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "targetMG": {
+            "type": "string",
+            "metadata": {
+                "description": "Target Management Group"
+            }
+        },
+        "policysetname": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of policy set"
+            }
+        },
+
+        "policysetdescription": {
+            "type": "string",
+            "metadata": {
+                "description": "The description of policy set"
+            }
+        },
+
+        "policysetassignmentname": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of policy assignment"
+            }
+        }
+    },
+    "variables": {
+        "mgScope": "[concat('Microsoft.Management/managementGroups/', parameters('targetMG'))]",
+        "mgScopepolicydefinition": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('targetMG'))]",
+        "policyDefinition1": "allowed-locations-prd"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "nestedDeployment",
+            "scope": "[variables('mgScope')]",
+            "location": "WestEurope",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "name": "[parameters('policysetname')]",
+                            "type": "Microsoft.Authorization/policySetDefinitions",
+                            "apiVersion": "2018-05-01",
+                            "properties": {
+                                "policyType": "Custom",
+                                "displayName": "[parameters('policysetname')]",
+                                "description": "[parameters('policysetdescription')]",
+                                "metadata": {},
+                                "parameters": {},
+                                "policyDefinitions": [
+                                    {
+                                        "policyDefinitionId": "[extensionResourceId(variables('mgScopepolicydefinition'), 'Microsoft.Authorization/policyDefinitions', variables('policyDefinition1'))]",
+                                        "parameters": {}
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

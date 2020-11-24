@@ -1,0 +1,65 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "targetMG": {
+            "type": "string",
+            "metadata": {
+                "description": "Target Management Group"
+            }
+        },
+        "policysetname": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of policy set for production environment"
+            }
+        },
+        "policysetdescription": {
+            "type": "string",
+            "metadata": {
+                "description": "The description of policy set"
+            }
+        },
+        "policysetassignmentname": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of policyset assignment"
+            }
+        }
+    },
+    "variables": {
+        "mgScope": "[concat('Microsoft.Management/managementGroups/', parameters('targetMG'))]",
+        "mgScopePolicysetDefinition": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('targetMG'))]",
+        "policyDefinition1": "allowed-locations-prd"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "nestedDeployment",
+            "scope": "[variables('mgScope')]",
+            "location": "WestEurope",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "type": "Microsoft.Authorization/policyAssignments",
+                            "name": "[parameters('policysetassignmentname')]",
+                            "apiVersion": "2019-09-01",
+                            "location": "WestEurope",
+                            "identity": {
+                                "type": "SystemAssigned"
+                            },
+                            "properties": {
+                                "policyDefinitionId": "[extensionResourceId(variables('mgScopePolicysetDefinition'), 'Microsoft.Authorization/policysetDefinitions', parameters('policysetname'))]"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
